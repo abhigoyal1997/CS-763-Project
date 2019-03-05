@@ -19,7 +19,7 @@ class BinaryQADataset(Dataset):
 
         questions = {}
         for q in qjson:
-            questions[q['question_id']] = (qjson['image_id'],qjson['question'])
+            questions[q['question_id']] = (q['image_id'],q['question'])
 
         with open(os.path.join(root, 'annotations.json'),'r') as f:
             ajson = json.load(f)
