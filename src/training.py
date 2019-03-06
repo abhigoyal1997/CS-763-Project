@@ -5,7 +5,7 @@ from time import time
 from src.model_utils import save_model
 
 
-def train(model, hparams, dataset, model_path=None, log_interval=None, tqdm=None):
+def train(model, hparams, dataset, model_path=None, log_interval=None):
     batch_size = hparams['batch_size']
     num_epochs = hparams['num_epochs']
     train_ratio = hparams['train_ratio']
@@ -27,11 +27,11 @@ def train(model, hparams, dataset, model_path=None, log_interval=None, tqdm=None
     best_val = None
     for epoch in range(num_epochs):
         # Train
-        metrics = model.run_epoch('train', train_batches, criterion=criterion, optimizer=optimizer, epoch=epoch, writer=writer, log_interval=log_interval, tqdm=tqdm)
+        metrics = model.run_epoch('train', train_batches, criterion=criterion, optimizer=optimizer, epoch=epoch, writer=writer, log_interval=log_interval)
         print('Train: {}'.format(metrics))
 
         # Validate
-        metrics = model.run_epoch('valid', valid_batches, criterion=criterion, epoch=epoch, writer=writer, log_interval=log_interval, tqdm=tqdm)
+        metrics = model.run_epoch('valid', valid_batches, criterion=criterion, epoch=epoch, writer=writer, log_interval=log_interval)
         print('Validation: {}'.format(metrics))
 
         if 'acc' in metrics:
