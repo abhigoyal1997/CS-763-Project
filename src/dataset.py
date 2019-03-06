@@ -7,11 +7,12 @@ from torch.utils.data import Dataset
 
 
 class BinaryQADataset(Dataset):
-    def __init__(self, root, image_size, size=None):
+    def __init__(self, root, image_size, size=None, split='train'):
         super(Dataset, self).__init__()
         self.image_size = image_size
         self.post_transform = transforms.ToTensor()
         self.image_dir = os.path.join(root, 'images')
+        self.split = split
 
         with open(os.path.join(root, 'questions.json'),'r') as f:
             qjson = json.load(f)
@@ -37,7 +38,7 @@ class BinaryQADataset(Dataset):
 
     def transformation(self, imgs):
         for i in range(len(imgs)):
-            if i.size != self.image_size:
+            if imgs[i].size != self.image_size:
                 imgs[i] = transforms.functional.resize(imgs[i], self.image_size)
 
         if self.post_transform is not None:
@@ -49,7 +50,7 @@ class BinaryQADataset(Dataset):
         return len(self.df)
 
     def __getitem__(self, index):
-        x = Image.open(os.path.join(self.image_dir, f'abstract_v002_train2015_{self.instances[index][0]:012}.png'))
+        x = Image.open(os.path.join(self.image_dir, f'abstract_v002_{self.split}2015_{self.instances[index][0]:012}.png'))
         x = self.transformation([x])[0]
         q = self.instances[index][1]
         y = self.instances[index][2]
