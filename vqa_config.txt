@@ -1,5 +1,0 @@
-v
-im_config.txt
-tm_config.txt
-linear 100
-linear 1

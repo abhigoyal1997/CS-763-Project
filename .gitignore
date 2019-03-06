@@ -1,6 +1,7 @@
 models/
 logs/
 notebook.py
+**.txt*
 **out**
 *results*
 *prof*
