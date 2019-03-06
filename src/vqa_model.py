@@ -101,7 +101,7 @@ class VQAModel(nn.Module):
             # Update metrics
             loss += batch_loss.item()
             if self.out_shape == 1:
-                predictions = (torch.sigmoid(logits) > 0.5).long()
+                predictions = (torch.sigmoid(logits) > 0.5).float()
             else:
                 # TODO: handle other cases
                 pass
