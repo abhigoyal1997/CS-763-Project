@@ -11,7 +11,7 @@ class ImageModel(nn.Module):
 
         self.in_shape = args['in_shape']
 
-        x = torch.rand(1, *self.in_shape)
+        x = torch.empty(1, *self.in_shape)
         self.layers = nn.ModuleList()
         i = 1
         while i < len(config):
@@ -20,7 +20,9 @@ class ImageModel(nn.Module):
                 x = self.layers[-1](x)
             i += 1
 
-    def forward(self, x, z=None, debug=False):
+        self.out_shape = x.size(1)
+
+    def forward(self, x, debug=False):
         if debug:
             outputs = []
 

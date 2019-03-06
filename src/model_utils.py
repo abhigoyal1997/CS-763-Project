@@ -4,6 +4,7 @@ import torch
 
 from src.image_model import ImageModel
 from src.text_model import TextModel
+from src.vqa_model import VQAModel
 
 MODELS = {
     'i': ImageModel,
@@ -21,13 +22,13 @@ def save_model(model, model_path):
 
 def read_config(config_file):
     def cast(x):
-        if '.' in x:
-            return float(x)
-        else:
-            try:
+        try:
+            if '.' in x:
+                return float(x)
+            else:
                 return int(x)
-            except Exception:
-                return x
+        except Exception:
+            return x
 
     with open(config_file, 'r') as f:
         config = f.readlines()
@@ -37,7 +38,11 @@ def read_config(config_file):
 
 
 def create_model(config, args=None, cuda=True):
-    if config[0][0] in MODELS:
+    if config[0][0] == 'v':
+        args['im'] = create_model(read_config(config[1][0]), args={'in_shape': args['image_shape']}, cuda=cuda)
+        args['tm'] = create_model(read_config(config[2][0]), args={'vocab_size': args['vocab_size']}, cuda=cuda)
+        model = VQAModel(config, args)
+    elif config[0][0] in MODELS:
         model = MODELS[config[0][0]](config, args)
     else:
         print('{} not implemented!'.format(config[0][0]))

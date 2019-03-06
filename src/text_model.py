@@ -1,3 +1,4 @@
+import torch
 import torch.nn as nn
 
 from src.modules import create_module
@@ -10,6 +11,7 @@ class TextModel(nn.Module):
         self.config = config
 
         self.embed = create_module(config[1], args['vocab_size'])
+        self.vocab_size = self.embed.num_embeddings
         self.rcell = create_module(config[2], config[1][1])
 
         self.layers = nn.ModuleList()
@@ -17,6 +19,10 @@ class TextModel(nn.Module):
         while i < len(config):
             self.layers.append(create_module(config[i], config[i-1][1]))
             i += 1
+
+    @property
+    def out_shape(self):
+        return self.forward(torch.Tensor([[1]]).long(), torch.Tensor([1]).long()).shape[-1]
 
     def forward(self, x, lengths, debug=False):
         if debug:

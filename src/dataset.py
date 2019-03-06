@@ -11,7 +11,7 @@ from torch.utils.data import Dataset
 
 
 class BinaryQADataset(Dataset):
-    def __init__(self, root, image_size, nlp, size=None, split='train', maxlen=None):
+    def __init__(self, root, nlp, image_size=(700,400), size=None, split='train', maxlen=None, random_seed=1234):
         super(Dataset, self).__init__()
         self.image_size = image_size
         self.post_transform = transforms.ToTensor()
@@ -28,6 +28,8 @@ class BinaryQADataset(Dataset):
             self.df['length'] = self.df.length.apply(lambda x: min(self.maxlen, x))
 
         self.df['q_pad'] = self.df.q_idx.apply(self.pad_text)
+        if size is not None:
+            self.df = self.df.sample(n=size, random_state=random_seed)
 
         print(f'Found {len(self.df)} instances!')
 
@@ -52,13 +54,14 @@ class BinaryQADataset(Dataset):
         return len(self.df)
 
     def __getitem__(self, index):
-        x = Image.open(os.path.join(self.image_dir, f'abstract_v002_{self.split}2015_{self.df.image_id[index]:012}.png'))
+        instance = self.df.iloc[index]
+        x = Image.open(os.path.join(self.image_dir, f"abstract_v002_{self.split}2015_{instance['image_id']:012}.png"))
         x = self.transformation([x])[0]
-        q = self.df.q_pad[index]
-        y = torch.Tensor(self.df.answers[index])
-        length = self.df.length[index]
+        q = instance['q_pad']
+        y = torch.Tensor(instance['answers'])
+        length = instance['length']
 
-        return [x,q,y,length]
+        return [x,q,length,y]
 
     def pad_text(self, s):
         padded = np.zeros((self.maxlen,), dtype=np.int64)

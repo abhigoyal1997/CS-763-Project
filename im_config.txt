@@ -1,0 +1,11 @@
+i
+conv 32 5
+max2d 2
+relu
+norm2d
+conv 64 3
+max2d 2
+drop2d 0.5
+relu
+flat
+linear 1024

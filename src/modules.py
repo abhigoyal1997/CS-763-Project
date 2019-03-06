@@ -14,9 +14,8 @@ MODULES = {
         'conv': nn.Conv2d,
         'linear': nn.Linear,
         'norm2d': nn.BatchNorm2d,
-        'embed': nn.Embedding,
         'lstm': nn.LSTM,
-        'rnn': nn.RNN
+        'rnn': nn.RNN,
     },
     'f': {
         'max2d': nn.MaxPool2d,
@@ -28,7 +27,18 @@ MODULES = {
 }
 
 
+def pretrained_embedding_layer(args):
+    # TODO: Embedding layer with pretrained weights
+    pass
+
+
 def create_module(config, in_features=None):
+    if config[0] == 'embed':
+        if config[1] == 'p':
+            return pretrained_embedding_layer(config[2])
+        else:
+            return nn.Embedding(in_features, *config[1:])
+
     try:
         if config[0] in MODULES['nn']:
             module = MODULES['nn'][config[0]](in_features, *config[1:])
