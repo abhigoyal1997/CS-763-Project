@@ -73,10 +73,9 @@ class VQAModel(nn.Module):
             self.eval()
 
         loss = 0.0
-        correct_predictions = 0
-        data_size = 0
+        acc = 0
         i = 0
-
+        data_size = 0
         for data in tqdm(batches, desc='Epoch {}: '.format(epoch), total=len(batches)):
             if self.is_cuda:
                 for k in range(len(data)):
@@ -107,7 +106,7 @@ class VQAModel(nn.Module):
                 # TODO: handle other cases
                 pass
 
-            correct_predictions += (predictions == y.long()).sum().item()
+            acc += torch.clamp(((predictions.expand_as(y) == y).sum(dim=1,keepdim=True).expand_as(y) - (predictions.expand_as(y) == y).long()).float()/3, 0.0, 1.0).mean(dim=1).sum(dim=0)
             data_size += x.shape[0]
 
             if mode == 'train' and (log_interval is not None) and (i % log_interval == 0):
@@ -115,7 +114,7 @@ class VQAModel(nn.Module):
             i += 1
 
         loss = loss/len(batches)
-        accuracy = correct_predictions/data_size
+        accuracy = acc/data_size
         if writer is not None:
             writer.add_scalar('{}_acc'.format(mode), accuracy, epoch)
             if mode == 'valid':
