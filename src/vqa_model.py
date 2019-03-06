@@ -1,7 +1,6 @@
 import torch
 import torch.nn as nn
 
-from tqdm import tqdm
 from src.modules import create_module
 
 
@@ -66,7 +65,7 @@ class VQAModel(nn.Module):
         else:
             pass  # TODO: handle other cases (numeric answers and open ended answers)
 
-    def run_epoch(self, mode, batches, epoch, criterion=None, optimizer=None, writer=None, log_interval=None):
+    def run_epoch(self, mode, batches, epoch, criterion=None, optimizer=None, writer=None, log_interval=None, tqdm=None):
         if mode == 'train':
             self.train()
         else:
@@ -76,6 +75,9 @@ class VQAModel(nn.Module):
         correct_predictions = 0
         data_size = 0
         i = 0
+        if tqdm is None:
+            from tqdm import tqdm
+
         for data in tqdm(batches, desc='Epoch {}: '.format(epoch), total=len(batches)):
             if self.is_cuda:
                 for k in range(len(data)):
