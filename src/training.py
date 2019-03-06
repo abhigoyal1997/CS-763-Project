@@ -1,4 +1,4 @@
-from torch.utils.data import Subset, DataLoader
+from torch.utils.data import DataLoader, random_split
 from torch.optim import Adam
 from tensorboardX import SummaryWriter
 from time import time
@@ -12,8 +12,7 @@ def train(model, hparams, dataset, model_path=None, log_interval=None):
     num_workers = hparams['num_workers']
 
     train_size = int(train_ratio*len(dataset))
-    train_set = Subset(dataset, list(range(train_size)))
-    valid_set = Subset(dataset, list(range(train_size, len(dataset))))
+    train_set, valid_set = random_split(dataset, [train_size, len(dataset)-train_size])
 
     train_batches = DataLoader(train_set, batch_size=batch_size, num_workers=num_workers, shuffle=True)
     valid_batches = DataLoader(valid_set, batch_size=batch_size, num_workers=num_workers)
