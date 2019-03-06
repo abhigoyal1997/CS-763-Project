@@ -1,5 +1,5 @@
 t
 embed 128
-rnn 256 2
+lstm 256 2
 linear 512
 linear 1024
