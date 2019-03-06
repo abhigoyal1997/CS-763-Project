@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 
 from src.modules import create_module
-from tqdm import tqdm_notebook as tqdm
+from tqdm import tqdm as tqdm
 
 
 class VQAModel(nn.Module):
