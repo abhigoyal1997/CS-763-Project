@@ -36,9 +36,9 @@ def read_config(config_file):
     return config
 
 
-def create_model(config, cuda=True):
+def create_model(config, args=None, cuda=True):
     if config[0][0] in MODELS:
-        model = MODELS[config[0][0]](config)
+        model = MODELS[config[0][0]](config, args)
     else:
         print('{} not implemented!'.format(config[0][0]))
         sys.exit(0)

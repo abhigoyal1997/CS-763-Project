@@ -31,6 +31,10 @@ class BinaryQADataset(Dataset):
 
         print(f'Found {len(self.df)} instances!')
 
+    @property
+    def vocab_size(self):
+        return len(self.word2idx)
+
     def indexer(self, s):
         return [self.word2idx[w.text.lower()] for w in self.nlp(s)]
 

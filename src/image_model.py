@@ -5,16 +5,15 @@ from src.modules import create_module
 
 
 class ImageModel(nn.Module):
-    def __init__(self, config):
+    def __init__(self, config, args):
         super(ImageModel, self).__init__()
         self.config = config
 
-        i = 1
-        self.in_shape = (config[i][0], *config[i][-1:0:-1])
+        self.in_shape = args['in_shape']
 
         x = torch.rand(1, *self.in_shape)
         self.layers = nn.ModuleList()
-        i += 1
+        i = 1
         while i < len(config):
             self.layers.append(create_module(config[i], x.size(1)))
             with torch.no_grad():

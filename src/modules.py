@@ -14,13 +14,16 @@ MODULES = {
         'conv': nn.Conv2d,
         'linear': nn.Linear,
         'norm2d': nn.BatchNorm2d,
+        'embed': nn.Embedding,
+        'lstm': nn.LSTM,
+        'rnn': nn.RNN
     },
     'f': {
         'max2d': nn.MaxPool2d,
         'relu': nn.ReLU,
         'drop1d': nn.Dropout,
         'drop2d': nn.Dropout2d,
-        'flat': Flat
+        'flat': Flat,
     }
 }
 
