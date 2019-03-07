@@ -14,20 +14,17 @@ class TextModel(nn.Module):
         self.vocab_size = self.embed.num_embeddings
         self.rcell = create_module(config[2], config[1][1])
 
+        x = torch.empty(1, config[2][1])
         self.layers = nn.ModuleList()
         i = 3
         while i < len(config):
-            self.layers.append(create_module(config[i], config[i-1][1]))
+            self.layers.append(create_module(config[i], x.size(1)))
+            with torch.no_grad():
+                x = self.layers[-1](x)
             i += 1
 
+        self.out_shape = x.size(1)
         self.is_cuda = False
-
-    @property
-    def out_shape(self):
-        if self.is_cuda:
-            return self.forward(torch.Tensor([[1]]).long().cuda(), torch.Tensor([1]).long().cuda()).shape[-1]
-        else:
-            return self.forward(torch.Tensor([[1]]).long(), torch.Tensor([1]).long()).shape[-1]
 
     def cuda(self, device=None):
         self.is_cuda = True

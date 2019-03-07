@@ -16,6 +16,12 @@ def save_model(model, model_path):
     with open(os.path.join(model_path,'config.txt'),'w') as f:
         f.write('\n'.join([' '.join([str(j) for j in i]) for i in model.config]))
 
+    if model.config[0][0] == 'v':
+        with open(os.path.join(model_path,model.config[1][0]),'w') as f:
+            f.write('\n'.join([' '.join([str(j) for j in i]) for i in model.im.config]))
+        with open(os.path.join(model_path,model.config[2][0]),'w') as f:
+            f.write('\n'.join([' '.join([str(j) for j in i]) for i in model.tm.config]))
+
     torch.save(model.state_dict(), os.path.join(model_path, '{}.pth'.format(model.config[0][0])))
     print('{} saved to {}'.format(model.config[0][0], model_path))
 
