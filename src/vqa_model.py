@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 
 from src.modules import create_module
-from tqdm import tqdm as tqdm
+from tqdm import tqdm_notebook as tqdm
 
 
 class VQAModel(nn.Module):
@@ -15,7 +15,7 @@ class VQAModel(nn.Module):
 
         self.layers = nn.ModuleList()
         i = 3
-        in_features = self.im.out_shape
+        in_features = self.im.out_shape + self.tm.out_shape
         x = torch.empty(1,in_features)
         while i < len(config):
             self.layers.append(create_module(config[i], x.size(1)))
@@ -37,7 +37,7 @@ class VQAModel(nn.Module):
         else:
             q = self.tm(q, lengths)
 
-        x = x*q
+        x = torch.cat([x,q], dim=1)
         if debug:
             outputs.append(x)
 
@@ -53,6 +53,8 @@ class VQAModel(nn.Module):
 
     def cuda(self, device=None):
         self.is_cuda = True
+        self.tm.is_cuda = True
+        self.im.is_cuda = True
         return super(VQAModel, self).cuda(device)
 
     def get_criterion(self):
@@ -106,7 +108,7 @@ class VQAModel(nn.Module):
                 # TODO: handle other cases
                 pass
 
-            acc += torch.clamp(((predictions.expand_as(y) == y).sum(dim=1,keepdim=True).expand_as(y) - (predictions.expand_as(y) == y).long()).float()/3, 0.0, 1.0).mean(dim=1).sum(dim=0)
+            acc += torch.clamp(((predictions.expand_as(y) == y).sum(dim=1,keepdim=True).expand_as(y) - (predictions.expand_as(y) == y).long()).float()/3, 0.0, 1.0).mean(dim=1).sum(dim=0).item()
             data_size += x.shape[0]
 
             if mode == 'train' and (log_interval is not None) and (i % log_interval == 0):

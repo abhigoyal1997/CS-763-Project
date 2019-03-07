@@ -20,9 +20,18 @@ class TextModel(nn.Module):
             self.layers.append(create_module(config[i], config[i-1][1]))
             i += 1
 
+        self.is_cuda = False
+
     @property
     def out_shape(self):
-        return self.forward(torch.Tensor([[1]]).long(), torch.Tensor([1]).long()).shape[-1]
+        if self.is_cuda:
+            return self.forward(torch.Tensor([[1]]).long().cuda(), torch.Tensor([1]).long().cuda()).shape[-1]
+        else:
+            return self.forward(torch.Tensor([[1]]).long(), torch.Tensor([1]).long()).shape[-1]
+
+    def cuda(self, device=None):
+        self.is_cuda = True
+        return super(TextModel, self).cuda(device)
 
     def forward(self, x, lengths, debug=False):
         if debug:

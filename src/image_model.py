@@ -21,6 +21,7 @@ class ImageModel(nn.Module):
             i += 1
 
         self.out_shape = x.size(1)
+        self.is_cuda = False
 
     def forward(self, x, debug=False):
         if debug:

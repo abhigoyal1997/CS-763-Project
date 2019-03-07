@@ -24,12 +24,12 @@ def main(args):
         config = read_config(args.model_config)
         hparams = read_hparams(args.train_specs)
 
-        print('Creating new model...', flush=True)
-        model = create_model(config, cuda=args.cuda)
-        print('Model initialized!', flush=True)
-
         print('Loading data...', flush=True)
-        dataset = Dataset(args.data_root, nlp=nlp, size=args.ds, split='train', random_seed=RANDOM_SEED)
+        dataset = Dataset(args.data_root, nlp=nlp, image_size=(224,224), size=args.ds, split='train', random_seed=RANDOM_SEED)
+
+        print('Creating new model...', flush=True)
+        model = create_model(config, args={'image_shape':dataset[0][0].shape, 'vocab_size':dataset.vocab_size}, cuda=args.cuda)
+        print('Model initialized!', flush=True)
 
         print('Training model...', flush=True)
         train(model, hparams, dataset, model_path, log_interval=2)

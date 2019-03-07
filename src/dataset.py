@@ -54,6 +54,8 @@ class BinaryQADataset(Dataset):
         return len(self.df)
 
     def __getitem__(self, index):
+        if isinstance(index, torch.Tensor):
+            index = index.item()
         instance = self.df.iloc[index]
         x = Image.open(os.path.join(self.image_dir, f"abstract_v002_{self.split}2015_{instance['image_id']:012}.png"))
         x = self.transformation([x])[0]
