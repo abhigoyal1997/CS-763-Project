@@ -1,4 +1,6 @@
+import torch
 import torch.nn as nn
+import numpy as np
 
 
 class Flat(nn.Module):
@@ -30,14 +32,19 @@ MODULES = {
 
 
 def pretrained_embedding_layer(args):
-    # TODO: Embedding layer with pretrained weights
-    pass
+    emb = np.load(args[0])['embeddings']
+    embeddings = torch.Tensor(emb)
+    num_embeddings, embedding_dim = embeddings.size()
+    layer = nn.Embedding(num_embeddings, embedding_dim)
+    layer.load_state_dict({'weight': embeddings})
+    layer.weight.requires_grad = False
+    return layer
 
 
 def create_module(config, in_features=None):
     if config[0] == 'embed':
         if config[1] == 'p':
-            return pretrained_embedding_layer(config[2])
+            return pretrained_embedding_layer(config[2:])
         else:
             return nn.Embedding(in_features, *config[1:])
 

@@ -14,7 +14,7 @@ def train(model, hparams, dataset, model_path=None, log_interval=None):
     train_size = int(train_ratio*len(dataset))
     train_set, valid_set = random_split(dataset, [train_size, len(dataset)-train_size])
 
-    train_batches = DataLoader(train_set, batch_size=batch_size, num_workers=num_workers, shuffle=True)
+    train_batches = DataLoader(train_set, batch_size=batch_size, num_workers=num_workers, shuffle=True, drop_last=True)
     valid_batches = DataLoader(valid_set, batch_size=batch_size, num_workers=num_workers)
 
     criterion = model.get_criterion()

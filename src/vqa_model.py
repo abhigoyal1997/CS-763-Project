@@ -16,7 +16,7 @@ class VQAModel(nn.Module):
         self.layers = nn.ModuleList()
         i = 3
         in_features = self.im.out_shape + self.tm.out_shape
-        x = torch.empty(1,in_features)
+        x = torch.empty(2,in_features)
         while i < len(config):
             self.layers.append(create_module(config[i], x.size(1)))
             with torch.no_grad():

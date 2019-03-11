@@ -86,8 +86,8 @@ class BinaryQADataset(Dataset):
         words = sorted(words, key=words.get, reverse=True)
         words = ['_PAD','_UNK'] + words
 
-        with open('vocab.txt', 'w') as f:
-            f.write('\n'.join(words))
+        # with open('vocab.txt', 'w') as f:
+        #     f.write('\n'.join(words))
 
         self.word2idx = {o:i for i,o in enumerate(words)}
         self.idx2word = {i:o for i,o in enumerate(words)}

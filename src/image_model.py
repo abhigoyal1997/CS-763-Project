@@ -11,7 +11,7 @@ class ImageModel(nn.Module):
 
         self.in_shape = args['in_shape']
 
-        x = torch.empty(1, *self.in_shape)
+        x = torch.empty(2, *self.in_shape)
         self.layers = nn.ModuleList()
         i = 1
         while i < len(config):

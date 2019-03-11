@@ -12,7 +12,7 @@ class TextModel(nn.Module):
 
         self.embed = create_module(config[1], args['vocab_size'])
         self.vocab_size = self.embed.num_embeddings
-        self.rcell = create_module(config[2], config[1][1])
+        self.rcell = create_module(config[2], self.embed.embedding_dim)
 
         x = torch.empty(1, config[2][1])
         self.layers = nn.ModuleList()
@@ -43,7 +43,7 @@ class TextModel(nn.Module):
             _, (_,c) = self.rcell(x)
         elif isinstance(self.rcell, nn.RNN):
             _,c = self.rcell(x)
-        x = c[-1]
+        x = torch.tanh(c[-1])
 
         if debug:
             outputs.append(x)
