@@ -13,6 +13,7 @@ MODULES = {
     'nn': {
         'conv': nn.Conv2d,
         'linear': nn.Linear,
+        'norm1d': nn.BatchNorm1d,
         'norm2d': nn.BatchNorm2d,
         'lstm': nn.LSTM,
         'rnn': nn.RNN,
@@ -23,6 +24,7 @@ MODULES = {
         'drop1d': nn.Dropout,
         'drop2d': nn.Dropout2d,
         'flat': Flat,
+        'pad2d': nn.ZeroPad2d
     }
 }
 
