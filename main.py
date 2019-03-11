@@ -51,7 +51,7 @@ def main(args):
 
 def parse_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-p','--cuda',dest='cuda',default=False, action='store_true')
+    parser.add_argument('-p','--device',dest='device',default='0')
     subparsers = parser.add_subparsers(dest='command')
 
     parser_train = subparsers.add_parser('train')
@@ -73,9 +73,16 @@ def parse_args():
     elif args.command[:2] == 'te':
         args.command = 'test'
 
-    if args.cuda:
-        print('Using cuda!')
+    if '0' in args.device:
+        os.environ['CUDA_VISIBLE_DEVICES'] = '0'
+        args.cuda = True
+        print('Using cuda:0')
+    elif '1' in args.device:
+        os.environ['CUDA_VISIBLE_DEVICES'] = '1'
+        args.cuda = True
+        print('Using cuda:1')
     else:
+        args.cuda = False
         print('Not using cuda!')
 
     return args
