@@ -43,10 +43,10 @@ def read_config(config_file):
     return config
 
 
-def create_model(config, args=None, cuda=True):
+def create_model(config, args=None, cuda=True, model_path=''):
     if config[0][0] == 'v':
-        args['im'] = create_model(read_config(config[1][0]), args={'in_shape': args['image_shape']}, cuda=cuda)
-        args['tm'] = create_model(read_config(config[2][0]), args={'vocab_size': args['vocab_size']}, cuda=cuda)
+        args['im'] = create_model(read_config(os.path.join(model_path,config[1][0])), args={'in_shape': args['image_shape']}, cuda=cuda)
+        args['tm'] = create_model(read_config(os.path.join(model_path,config[2][0])), args={'vocab_size': args['vocab_size']}, cuda=cuda)
         model = VQAModel(config, args)
     elif config[0][0] in MODELS:
         model = MODELS[config[0][0]](config, args)
@@ -60,9 +60,9 @@ def create_model(config, args=None, cuda=True):
         return model
 
 
-def load_model(model_path, cuda, weights=True):
+def load_model(model_path, args, cuda, weights=True):
     config = read_config(os.path.join(model_path, 'config.txt'))
-    model = create_model(config, cuda)
+    model = create_model(config, args, cuda, model_path)
     state_path = os.path.join(model_path, config[0][0]+'.pth')
     if os.path.exists(state_path) and weights:
         print('Loading weights from {}...'.format(state_path))
@@ -80,7 +80,8 @@ def read_hparams(spec_file):
         'batch_size',
         'num_epochs',
         'train_ratio',
-        'num_workers'
+        'num_workers',
+        'lr'
     ]
     hparams = {}
     for i in range(len(param_keys)):

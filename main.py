@@ -25,25 +25,25 @@ def main(args):
         hparams = read_hparams(args.train_specs)
 
         print('Loading data...', flush=True)
-        dataset = Dataset(args.data_root, nlp=nlp, image_size=(224,224), size=args.ds, split='train', random_seed=RANDOM_SEED)
+        dataset = Dataset(args.data_root, nlp=nlp, image_size=(192,192), size=args.ds, split='train', random_seed=RANDOM_SEED)
 
         print('Creating new model...', flush=True)
         model = create_model(config, args={'image_shape':dataset[0][0].shape, 'vocab_size':dataset.vocab_size}, cuda=args.cuda)
         print('Model initialized!', flush=True)
 
         print('Training model...', flush=True)
-        train(model, hparams, dataset, model_path, log_interval=2)
+        train(model, hparams, dataset, model_path, log_interval=6)
     elif args.command == 'test':
         if not os.path.exists(args.model_path):
             print("Model doesn't exist!")
             exit(0)
 
-        print('Loding model...', flush=True)
-        model = load_model(args.model_path, cuda=args.cuda, weights=not args.test_init)
-        print('Model loaded!', flush=True)
-
         print('Loading data...', flush=True)
-        dataset = Dataset(args.data_root, nlp=nlp, split='val')
+        dataset = Dataset(args.data_root, nlp=nlp, image_size=(192,192), split='val')
+
+        print('Loding model...', flush=True)
+        model = load_model(args.model_path, args={'image_shape':dataset[0][0].shape, 'vocab_size':dataset.vocab_size}, cuda=args.cuda, weights=not args.test_init)
+        print('Model loaded!', flush=True)
 
         print('Testing model...', flush=True)
         test(model, dataset, args.model_path)

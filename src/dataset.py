@@ -1,4 +1,5 @@
 import os
+import re
 import json
 import pandas as pd
 import torch
@@ -32,10 +33,14 @@ class BinaryQADataset(Dataset):
             self.df = self.df.sample(n=size, random_state=random_seed)
 
         print(f'Found {len(self.df)} instances!')
+        num_yes = self.df.answers.apply(sum).sum()
+        num_no = self.df.answers.apply(len).sum() - num_yes
+        print(f'Number of yes = {num_yes}; Number of no = {num_no}')
 
     @property
     def vocab_size(self):
-        return len(self.word2idx)
+        # return len(self.word2idx)
+        return 2743
 
     def indexer(self, s):
         return [self.word2idx[w.text.lower()] for w in self.nlp(s)]
@@ -77,7 +82,7 @@ class BinaryQADataset(Dataset):
         with open(os.path.join(root, 'questions.json'),'r') as f:
             q_df = pd.DataFrame(json.load(f)['questions'])
 
-        q_df['question'] = q_df.question.apply(lambda x:x.strip())
+        q_df['question'] = q_df.question.apply(lambda x:re.sub(' +', ' ', x.strip()))
 
         words = Counter()
         for q in q_df.question.values:
@@ -86,11 +91,14 @@ class BinaryQADataset(Dataset):
         words = sorted(words, key=words.get, reverse=True)
         words = ['_PAD','_UNK'] + words
 
-        # with open('vocab.txt', 'w') as f:
-        #     f.write('\n'.join(words))
+        if self.split == 'train':
+            self.word2idx = {o:i for i,o in enumerate(words)}
 
-        self.word2idx = {o:i for i,o in enumerate(words)}
-        self.idx2word = {i:o for i,o in enumerate(words)}
+            with open('word_idx.txt', 'w') as f:
+                f.write('\n'.join([f'{k} {v}' for k,v in self.word2idx.items()]))
+        else:
+            with open('word_idx.txt','r') as f:
+                self.word2idx = dict([l.split() for l in f.read().split('\n')])
 
         q_df['q_idx'] = q_df.question.apply(self.indexer)
         q_df.set_index('question_id', inplace=True)

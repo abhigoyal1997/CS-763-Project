@@ -10,6 +10,7 @@ def train(model, hparams, dataset, model_path=None, log_interval=None):
     num_epochs = hparams['num_epochs']
     train_ratio = hparams['train_ratio']
     num_workers = hparams['num_workers']
+    lr = hparams['lr']
 
     train_size = int(train_ratio*len(dataset))
     train_set, valid_set = random_split(dataset, [train_size, len(dataset)-train_size])
@@ -18,7 +19,7 @@ def train(model, hparams, dataset, model_path=None, log_interval=None):
     valid_batches = DataLoader(valid_set, batch_size=batch_size, num_workers=num_workers)
 
     criterion = model.get_criterion()
-    optimizer = Adam(model.parameters())
+    optimizer = Adam(model.parameters(), lr=lr)
 
     log_path = model_path.replace('models','logs')+'_'+str(time())
     writer = SummaryWriter(log_dir=log_path)

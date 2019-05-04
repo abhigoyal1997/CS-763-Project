@@ -14,7 +14,7 @@ class TextModel(nn.Module):
         self.vocab_size = self.embed.num_embeddings
         self.rcell = create_module(config[2], self.embed.embedding_dim)
 
-        x = torch.empty(1, config[2][1])
+        x = torch.empty(2, config[2][1])
         self.layers = nn.ModuleList()
         i = 3
         while i < len(config):
