@@ -33,7 +33,7 @@ class TextModel(nn.Module):
 		self.is_cuda = True
 		return super(TextModel, self).cuda(device)
 
-	def forward(self, x, lengths, debug=False):
+	def forward(self, x, lengths, h0=None, c0=None, debug=False):
 		if debug:
 			outputs = []
 
@@ -42,10 +42,10 @@ class TextModel(nn.Module):
 			outputs.append(x)
 
 		x = nn.utils.rnn.pack_padded_sequence(x,lengths)
-		if isinstance(self.rcell, nn.LSTM):
+		if h0 is None:
 			_, (h,_) = self.rcell(x)
-		elif isinstance(self.rcell, nn.RNN):
-			h,_ = self.rcell(x)
+		else:
+			_, (h,_) = self.rcell(x, (h0,c0))
 		x = h[-1]
 
 		if debug:

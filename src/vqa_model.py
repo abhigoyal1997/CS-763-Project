@@ -39,10 +39,11 @@ class VQAModel(nn.Module):
 		if debug:
 			q, outputs = self.tm(q, lengths, debug=True)
 		else:
-			q = self.tm(q, lengths)
+			x = self.tm(q, lengths, x.unsqueeze(0), x.unsqueeze(0))
 
 		# x = torch.cat([x,q], dim=1)
-		x = x*q
+		# x = x*q
+
 		if debug:
 			outputs.append(x)
 

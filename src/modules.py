@@ -45,6 +45,7 @@ MODULES = {
 	'f': {
 		'max2d': nn.MaxPool2d,
 		'relu': nn.ReLU,
+		'tanh': nn.Tanh,
 		'drop1d': nn.Dropout,
 		'drop2d': nn.Dropout2d,
 		'flat': Flat,
@@ -75,7 +76,7 @@ def create_module(config, in_features=None, cuda=True):
 		module.classifier[-1] = nn.Linear(4096, int(config[1]))
 	elif config[0] == 'vgg16_bn':
 		module = models.vgg16_bn(True)
-		module.classifier[-1] = nn.Linear(4096, int(config[1]))
+		module.classifier = module.classifier[:4]
 	else:
 		try:
 			if config[0] in MODULES['nn']:
