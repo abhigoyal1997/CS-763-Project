@@ -6,6 +6,7 @@ notebook.py
 *results*
 *prof*
 **.DS_**
+*data*
 
 ### JupyterNotebook ###
 .ipynb_checkpoints
