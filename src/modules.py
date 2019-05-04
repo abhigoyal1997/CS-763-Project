@@ -5,11 +5,40 @@ from torchvision import models
 
 
 class Flat(nn.Module):
-	def __init__(self):
+	def __init__(self, keep_channels=0):
 		super(Flat, self).__init__()
+		self.keep_channels = keep_channels
 
 	def forward(self, x):
-		return x.view(x.size(0),-1)
+		if self.keep_channels == 0:
+			return x.view(x.size(0),-1)
+		else:
+			return x.view(x.size(0),x.size(1),-1)
+
+
+class Transpose(nn.Module):
+	def __init__(self):
+		super(Transpose, self).__init__()
+
+	def forward(self, x):
+		return x.permute(0,2,1)
+
+
+class Attention(nn.Module):
+	def __init__(self, in_features, hidden_dims=256):
+		super(Attention, self).__init__()
+		self.im_emd = nn.Linear(in_features, hidden_dims, bias=False)
+		self.vq_emd = nn.Linear(in_features, hidden_dims)
+		self.tanh = nn.Tanh()
+
+		self.fc = nn.Linear(hidden_dims, 1)
+
+	def forward(self, im, vq):
+		im_emd = self.im_emd(im)
+		vq_emd = self.vq_emd(vq)
+		h = self.tanh(im_emd+vq_emd.unsqueeze(1).expand_as(im_emd))
+		p = self.fc(h).sigmoid()
+		return p
 
 
 class Normalize(nn.Module):
@@ -41,13 +70,16 @@ MODULES = {
 		'norm2d': nn.BatchNorm2d,
 		'lstm': nn.LSTM,
 		'rnn': nn.RNN,
+		'attn': Attention
 	},
 	'f': {
 		'max2d': nn.MaxPool2d,
 		'relu': nn.ReLU,
+		'tanh': nn.Tanh,
 		'drop1d': nn.Dropout,
 		'drop2d': nn.Dropout2d,
 		'flat': Flat,
+		'transpose': Transpose,
 		'pad2d': nn.ZeroPad2d,
 		'normalize': Normalize,
 	}
@@ -74,8 +106,10 @@ def create_module(config, in_features=None, cuda=True):
 		module = models.vgg16(True)
 		module.classifier[-1] = nn.Linear(4096, int(config[1]))
 	elif config[0] == 'vgg16_bn':
-		module = models.vgg16_bn(True)
-		module.classifier[-1] = nn.Linear(4096, int(config[1]))
+		module = models.vgg16_bn(True).features
+		for p in module.parameters():
+			p.requires_grad = False
+		# module.classifier[-1] = nn.Linear(4096, int(config[1]))
 	else:
 		try:
 			if config[0] in MODULES['nn']:

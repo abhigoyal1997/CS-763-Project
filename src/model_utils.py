@@ -5,10 +5,12 @@ import torch
 from src.image_model import ImageModel
 from src.text_model import TextModel
 from src.vqa_model import VQAModel
+from src.attn_model import AttnModel
 
 MODELS = {
 	'i': ImageModel,
-	't': TextModel
+	't': TextModel,
+	'a': AttnModel
 }
 
 
@@ -48,6 +50,7 @@ def create_model(config, args=None, cuda=True, model_path=''):
 	if config[0][0] == 'v':
 		args['im'] = create_model(read_config(os.path.join(model_path,config[1][0])), args={'in_shape': args['image_shape']}, cuda=cuda)
 		args['tm'] = create_model(read_config(os.path.join(model_path,config[2][0])), args={'vocab_size': args['vocab_size']}, cuda=cuda)
+		args['am'] = create_model(read_config(os.path.join(model_path,config[3][0])), args={'in_features': args['tm'].out_shape}, cuda=cuda)
 		model = VQAModel(config, args)
 	elif config[0][0] in MODELS:
 		model = MODELS[config[0][0]](config, args)
@@ -82,9 +85,7 @@ def read_hparams(spec_file):
 		'num_epochs',
 		'train_ratio',
 		'num_workers',
-		'lr_im',
-		'lr_tm',
-		'lr_vm'
+		'lr',
 	]
 	hparams = {}
 	for i in range(len(param_keys)):

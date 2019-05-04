@@ -12,10 +12,11 @@ class VQAModel(nn.Module):
 		self.config = config
 		self.im = args['im']
 		self.tm = args['tm']
+		self.am = args['am']
 
 		self.layers = nn.ModuleList()
-		i = 3
-		in_features = self.im.out_shape
+		i = 4
+		in_features = self.tm.out_shape
 		x = torch.empty(2,in_features)
 		if args['cuda']:
 			x = x.cuda()
@@ -30,19 +31,22 @@ class VQAModel(nn.Module):
 		self.out_shape = x.size(1)
 		self.is_cuda = args['cuda']
 
-	def forward(self, x, q, lengths, debug=False):
+	def forward(self, im, q, lengths, debug=False):
 		if debug:
-			x, outputs = self.im(x, debug=True)
+			im, outputs = self.im(im, debug=True)
 		else:
-			x = self.im(x)
+			im = self.im(im)
 
 		if debug:
 			q, outputs = self.tm(q, lengths, debug=True)
 		else:
 			q = self.tm(q, lengths)
 
-		# x = torch.cat([x,q], dim=1)
-		x = x*q
+		if debug:
+			x, outputs = self.am(im, q, debug=True)
+		else:
+			x = self.am(im, q)
+
 		if debug:
 			outputs.append(x)
 

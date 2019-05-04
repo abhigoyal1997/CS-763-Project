@@ -18,11 +18,7 @@ def train(model, hparams, dataset, model_path=None, log_interval=None):
 	valid_batches = DataLoader(valid_set, batch_size=batch_size, num_workers=num_workers)
 
 	criterion = model.get_criterion()
-	optimizer = Adam([
-		{'params': model.im.parameters(), 'lr': hparams['lr_im']},
-		{'params': model.tm.parameters(), 'lr': hparams['lr_tm']},
-		{'params': model.layers.parameters(), 'lr': hparams['lr_vm']}
-	])
+	optimizer = Adam(model.parameters(), lr=hparams['lr'])
 
 	log_path = model_path.replace('models','logs')+'_'+str(time())
 	writer = SummaryWriter(log_dir=log_path)

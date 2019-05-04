@@ -17,7 +17,7 @@ class ImageModel(nn.Module):
 		self.layers = nn.ModuleList()
 		i = 1
 		while i < len(config):
-			self.layers.append(create_module(config[i], x.size(1)))
+			self.layers.append(create_module(config[i], x.size(-1)))
 			self.layers[-1].eval()
 			with torch.no_grad():
 				x = self.layers[-1](x)
