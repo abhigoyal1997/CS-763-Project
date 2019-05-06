@@ -107,8 +107,11 @@ optional arguments:
 
 ## Results and Observations
 
-The following image shows the plots for training loss, accuracy and validation loss, accuracy
+The following image shows the plots for training loss, accuracy and validation loss, accuracy for VGG + GLoVe embedding + MLP
 ![plot](https://github.com/abhigoyal1997/CS-763-Project/blob/master/results/training.png)
+
+This image shows plots for training loss, accuracy and validation loss, accuracy for SAN 
+![plot](https://github.com/abhigoyal1997/CS-763-Project/blob/master/results/training_san.png)
 
 ## Discussions
 
