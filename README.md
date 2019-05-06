@@ -130,7 +130,7 @@ One major dubiousness is the loss that the references have used. The paper on St
 We believe there might be a problematic artifact with this. Suppose if for an image-question pair, 8 of the 10 ground truth labels say 'Yes' and 2 of the 10 say 'No', then the issue will be that the probability of 'Yes' predicted by the model won't go above a threshold. Since for high p_yes values, 8/10(-log p) will be low but 2/10(-log(1-p)) will be too high, and this will send a gradient signal back to decrease the value of p. This might serve the purpose of avoiding too confident predictions, but the problem is that the confidence doesn't rise to that too high range from the beginning! We implemented this loss but it didn't work, as shown in the training curves of SAN.
 
 We also tried to modify it to :
-
+![plot](https://github.com/abhigoyal1997/CS-763-Project/blob/master/images/loss2.png)
 But that also didn't perform very well.
 
 ## References
