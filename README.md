@@ -32,10 +32,6 @@ Each question has 10 answers, taken from 10 independent human subjects. Thus the
  220,550 Training annotations, 113,280 Validation annotations. The distribution is 121556 Yes answers, 128894 No answers
 
 
-### Some observations
-
-### Discussions
-
 ## Requirements 
 Kindly use the requirements.txt to set up your machine for replicating this 
 experiment. some dependendecies are :
@@ -108,6 +104,11 @@ optional arguments:
   -i, --test-init
 
 ```
+
+## Results and Observations
+
+## Discussions
+
 
 ## References
 
