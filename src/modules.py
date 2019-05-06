@@ -37,7 +37,7 @@ class Attention(nn.Module):
 		im_emd = self.im_emd(im)
 		vq_emd = self.vq_emd(vq)
 		h = self.tanh(im_emd+vq_emd.unsqueeze(1).expand_as(im_emd))
-		p = self.fc(h).sigmoid()
+		p = self.fc(h).softmax(dim=1)
 		return p
 
 

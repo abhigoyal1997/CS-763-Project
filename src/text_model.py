@@ -45,7 +45,7 @@ class TextModel(nn.Module):
 		if isinstance(self.rcell, nn.LSTM):
 			_, (h,_) = self.rcell(x)
 		elif isinstance(self.rcell, nn.RNN):
-			h,_ = self.rcell(x)
+			_,h = self.rcell(x)
 		x = h[-1]
 
 		if debug:

@@ -31,34 +31,15 @@ class VQAModel(nn.Module):
 		self.out_shape = x.size(1)
 		self.is_cuda = args['cuda']
 
-	def forward(self, im, q, lengths, debug=False):
-		if debug:
-			im, outputs = self.im(im, debug=True)
-		else:
-			im = self.im(im)
-
-		if debug:
-			q, outputs = self.tm(q, lengths, debug=True)
-		else:
-			q = self.tm(q, lengths)
-
-		if debug:
-			x, outputs = self.am(im, q, debug=True)
-		else:
-			x = self.am(im, q)
-
-		if debug:
-			outputs.append(x)
+	def forward(self, im, q, lengths):
+		im = self.im(im)
+		q = self.tm(q, lengths)
+		x = self.am(im, q)
 
 		for layer in self.layers:
 			x = layer(x)
-			if debug:
-				outputs.append(x)
 
-		if debug:
-			return x, outputs
-		else:
-			return x
+		return x
 
 	def cuda(self, device=None):
 		self.is_cuda = True
@@ -71,7 +52,8 @@ class VQAModel(nn.Module):
 			bce_loss = nn.BCEWithLogitsLoss()
 
 			def loss(logits, y):
-				return bce_loss(logits.expand_as(y), y)
+				# return bce_loss(logits.expand_as(y), y)
+				return bce_loss(logits.squeeze(), (y.sum(dim=1)>=5).float() )
 
 			return loss
 		else:
@@ -80,6 +62,7 @@ class VQAModel(nn.Module):
 	def run_epoch(self, mode, batches, epoch, criterion=None, optimizer=None, writer=None, log_interval=None):
 		if mode == 'train':
 			self.train()
+			self.im.layers[1].eval() # For Fixed VGG
 		else:
 			self.eval()
 
