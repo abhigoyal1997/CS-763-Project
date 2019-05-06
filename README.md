@@ -1,0 +1,92 @@
+# Visual Question Answering
+
+## Objective
+The goal of Visual Question Answering is to be able to understand the semantics of scenes well enough to be able to answer open-ended, free-form natural language questions (asked by humans) about images. We aim to build and evaluate deep neural networks and compare them with certain baselines and state of the art models for the task. 
+
+## Solution Approaches
+  
+
+## Dataset
+We have used the datasets put up by the VQA group, Virginia Tech university for training our model and also testing. The datasets can be found at  https://visualqa.org/download.html
+We use Balanced Binary Abstract Scenes from the dataset which has only binary questions like "Are there flowers at the foot of the tree?"
+
+The dataset consists of 20,629 Training images , 10,696 Validation images, 22,055 Training questions, 11,328 Validation questions.
+Each question has 10 answers, taken from 10 independent human subjects. Thus there are
+ 220,550 Training annotations, 113,280 Validation annotations. The distribution is 121556 Yes answers, 128894 No answers
+
+## Pipeline
+
+
+
+### Some observations
+
+
+## Requirements 
+Kindly use the requirements.txt to set up your machine for replicating this 
+experiment. some dependendecies are :
+
+```
+
+
+```
+you can install these dependecies using `pip install requirements.txt`
+
+## Instructions
+
+```
+usage: main.py [-h] [-p DEVICE] {train,test} ...
+
+positional arguments:
+  {train,test}
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -p DEVICE, --device DEVICE
+
+```
+
+Training command : 
+```
+usage: main.py train [-h] [-mc MODEL_CONFIG] [-c COMMENT] [-d DATA_ROOT]
+                     [-ds DS] [-s TRAIN_SPECS]
+                     model_path
+
+positional arguments:
+  model_path
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -mc MODEL_CONFIG, --model-config MODEL_CONFIG
+  -c COMMENT, --comment COMMENT
+  -d DATA_ROOT, --data-root DATA_ROOT
+  -ds DS, --train-size DS
+  -s TRAIN_SPECS, --train-specs TRAIN_SPECS
+
+```
+
+Testing command : 
+```
+usage: main.py test [-h] [-d DATA_ROOT] [-i] model_path
+
+positional arguments:
+  model_path
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -d DATA_ROOT, --data-root DATA_ROOT
+  -i, --test-init
+
+```
+
+## References
+
+We take ideas from the following research publications for our VQA task
+
+* https://www.cv-foundation.org/openaccess/content_iccv_2015/papers/Antol_VQA_Visual_Question_ICCV_2015_paper.pdf}{VQA: Visual Question Answering (2015)
+    * https://www.cv-foundation.org/openaccess/content_iccv_2015/papers/Malinowski_Ask_Your_Neurons_ICCV_2015_paper.pdf Ask Your Neurons: A Neural-based Approach to Answering Questions about Images (2015)
+    * https://arxiv.org/pdf/1505.02074.pdf Exploring Models and Data for Image Question Answering (2015)
+    * https://arxiv.org/pdf/1601.01705.pdf Learning to Compose Neural Networks for Question Answering (2016)
+    * http://proceedings.mlr.press/v48/xiong16.pdf Dynamic Memory Networks for Visual and Textual Question Answering (2016)
+    * https://www.cv-foundation.org/openaccess/content_cvpr_2016/papers/Yang_Stacked_Attention_Networks_CVPR_2016_paper.pdf Stacked Attention Networks for Image Question Answering (2016)
+    * https://arxiv.org/pdf/1704.03162.pdf Show, Ask, Attend, and Answer: A Strong Baseline For Visual Question Answering (2017)
+
