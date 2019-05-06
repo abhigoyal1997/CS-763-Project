@@ -8,14 +8,14 @@ from src.training import train
 from src.testing import test
 from src.model_utils import read_config, read_hparams, load_model, create_model
 
-RANDOM_SEED = 0
+RANDOM_SEED = 51825
 
 
 def main(args):
 	nlp = spacy.load('en',disable=['parser', 'tagger', 'ner'])
 	if args.command == 'train':
 		if args.comment is not None:
-			model_path = args.model_path + '_' + args.comment
+			model_path = args.model_path + '-' + args.comment
 		else:
 			model_path = args.model_path
 		if not os.path.exists(model_path):
