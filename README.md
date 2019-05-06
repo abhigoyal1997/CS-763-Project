@@ -108,7 +108,7 @@ optional arguments:
 ## Results and Observations
 
 The following image shows the plots for training loss, accuracy and validation loss, accuracy
-![plot](https://github.com/abhigoyal1997/CS-763-Project/tree/master/results/training.png)
+![plot](https://github.com/abhigoyal1997/CS-763-Project/blob/master/results/training.png)
 
 ## Discussions
 
