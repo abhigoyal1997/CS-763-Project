@@ -107,6 +107,9 @@ optional arguments:
 
 ## Results and Observations
 
+The following image shows the plots for training loss, accuracy and validation loss, accuracy
+![plot](https://github.com/abhigoyal1997/CS-763-Project/tree/master/results/training.png)
+
 ## Discussions
 
 
@@ -114,7 +117,7 @@ optional arguments:
 
 We take ideas from the following research publications for our VQA task
 
-* https://www.cv-foundation.org/openaccess/content_iccv_2015/papers/Antol_VQA_Visual_Question_ICCV_2015_paper.pdf}{VQA: Visual Question Answering (2015)
+* https://www.cv-foundation.org/openaccess/content_iccv_2015/papers/Antol_VQA_Visual_Question_ICCV_2015_paper.pdf VQA: Visual Question Answering (2015)
 * https://www.cv-foundation.org/openaccess/content_iccv_2015/papers/Malinowski_Ask_Your_Neurons_ICCV_2015_paper.pdf Ask Your Neurons: A Neural-based Approach to Answering Questions about Images (2015)
 * https://arxiv.org/pdf/1505.02074.pdf Exploring Models and Data for Image Question Answering (2015)
 * https://arxiv.org/pdf/1601.01705.pdf Learning to Compose Neural Networks for Question Answering (2016)
