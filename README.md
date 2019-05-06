@@ -107,14 +107,31 @@ optional arguments:
 
 ## Results and Observations
 
-The following image shows the plots for training loss, accuracy and validation loss, accuracy for VGG + GLoVe embedding + MLP
+The accuracy of any trained model on a test image and question is calculated as :
+![plot](https://github.com/abhigoyal1997/CS-763-Project/blob/master/images/accuracy.png)
+
+The following image shows the plots for training loss, accuracy and validation loss, accuracy for Self-trained ConvNet + GLoVe embedding + MLP. One can observe that the validation accuracy for this model reaches  around 63%, which is about the best that this model can achieve (https://imatge.upc.edu/web/sites/default/files/pub/xRoldan.pdf).
 ![plot](https://github.com/abhigoyal1997/CS-763-Project/blob/master/results/training.png)
 
-This image shows plots for training loss, accuracy and validation loss, accuracy for SAN 
+This image shows plots for training loss, accuracy and validation loss, accuracy for SAN. Three different learning rates have been combined in the plot i.e 1e-3, 1e-4, 1e-5. 
 ![plot](https://github.com/abhigoyal1997/CS-763-Project/blob/master/results/training_san.png)
 
 ## Discussions
+The naive model that we tried (Self-trained ConvNet + GloVe embedding + MLP) achieved a decent accuracy compared to its capacity. However the validation loss curve looks a bit discouraging since the val_loss keeps on increasing from the beginning. This problem was even more amplified when we tried Stacked Attention Network (SAN).
 
+We found that the existing papers (references provided) are a bit incomplete. Most papers only discuss about the architecture, but don't mention the details about their training parameters. Some don't even mention the loss that they've used. [Some papers tend to contradict each other in what might and might not help the training of the networks]
+
+We tried many things to alleviate this problem of 'overfitting from the beginning'. We experimented extensively with Dropout and Batchnorm, but couldn't get major performance gains. For ensuring sanity, we did the 'overfitting experiment', and it went as planned. The network was quickly able to overfit on a small part of the test data. We tried different flavours of cross-entropy loss as well, but even that didn't go very well. 
+From this, our conclusion says that the overall performance of the model is a little too sensitive to the parameters, and this might have hindered us from reproducing the results that the SAN paper mentions. In fact, VQA as a task (with the current approaches) might be too sensitive to the hyperparameters, and the paper "Show, Ask, Attend, Tell" says that for VQA, the devil is in the details.
+
+One major dubiousness is the loss that the references have used. The paper on Stacked Attention Networks doesn't mention the word loss at all. We studied "Show, Ask, Attend, Tell" which mentions the following loss :
+![plot](https://github.com/abhigoyal1997/CS-763-Project/blob/master/images/loss1.png)
+
+We believe there might be a problematic artifact with this. Suppose if for an image-question pair, 8 of the 10 ground truth labels say 'Yes' and 2 of the 10 say 'No', then the issue will be that the probability of 'Yes' predicted by the model won't go above a threshold. Since for high p_yes values, 8/10(-log p) will be low but 2/10(-log(1-p)) will be too high, and this will send a gradient signal back to decrease the value of p. This might serve the purpose of avoiding too confident predictions, but the problem is that the confidence doesn't rise to that too high range from the beginning! We implemented this loss but it didn't work, as shown in the training curves of SAN.
+
+We also tried to modify it to :
+
+But that also didn't perform very well.
 
 ## References
 
@@ -127,4 +144,3 @@ We take ideas from the following research publications for our VQA task
 * http://proceedings.mlr.press/v48/xiong16.pdf Dynamic Memory Networks for Visual and Textual Question Answering (2016)
 * https://www.cv-foundation.org/openaccess/content_cvpr_2016/papers/Yang_Stacked_Attention_Networks_CVPR_2016_paper.pdf Stacked Attention Networks for Image Question Answering (2016)
 * https://arxiv.org/pdf/1704.03162.pdf Show, Ask, Attend, and Answer: A Strong Baseline For Visual Question Answering (2017)
-

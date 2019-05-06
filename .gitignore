@@ -3,7 +3,7 @@ logs/
 notebook.py
 **.txt*
 **out**
-*results*
+# *results*
 *prof*
 **.DS_**
 *data*
